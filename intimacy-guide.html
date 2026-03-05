@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intimacy Guide ✦ Personalized Suggestions</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose: #e8294a;
+    --rose-light: #ff6b8a;
+    --rose-pale: #ffb3c1;
+    --pink-deep: #c9184a;
+    --blush: #ffd6e0;
+    --petal: #fff0f3;
+    --wine: #6b0f2b;
+    --cream: #fff5f7;
+    --text-dark: #2d0a14;
+    --text-mid: #7a1f35;
+    --glow: rgba(232, 41, 74, 0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-dark);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 10% 20%, rgba(255,107,138,0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(201,24,74,0.1) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(255,214,224,0.4) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Floating petals */
+  .petal-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .petal {
+    position: absolute;
+    font-size: 1.2rem;
+    opacity: 0.15;
+    animation: floatPetal linear infinite;
+  }
+  @keyframes floatPetal {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.15; }
+    90% { opacity: 0.15; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* Header */
+  header {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 3rem 2rem 2rem;
+  }
+
+  .logo-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--rose), var(--pink-deep));
+    color: white;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    padding: 0.4rem 1.2rem;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    color: var(--rose);
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+
+  h1 em {
+    color: var(--pink-deep);
+    font-style: italic;
+  }
+
+  .subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--text-mid);
+    font-style: italic;
+    margin-bottom: 0.5rem;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1.5rem auto;
+    max-width: 300px;
+  }
+  .divider-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--rose-pale), transparent); }
+  .divider-icon { color: var(--rose); font-size: 1rem; }
+
+  /* Main container */
+  .container {
+    position: relative;
+    z-index: 10;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+
+  /* Step indicator */
+  .steps-bar {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .step-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--rose-pale);
+    transition: all 0.3s;
+  }
+  .step-dot.active { background: var(--rose); transform: scale(1.4); }
+  .step-dot.done { background: var(--rose-light); }
+
+  /* Cards */
+  .card {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(232,41,74,0.15);
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow: 0 8px 40px rgba(232,41,74,0.08), 0 2px 10px rgba(0,0,0,0.04);
+    margin-bottom: 1.5rem;
+    transition: all 0.4s ease;
+    display: none;
+  }
+  .card.active { display: block; animation: slideIn 0.5s ease; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .card-icon {
+    width: 50px; height: 50px;
+    background: linear-gradient(135deg, var(--rose), var(--pink-deep));
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px var(--glow);
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--rose);
+  }
+  .card-desc {
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    margin-top: 0.2rem;
+  }
+
+  /* Form elements */
+  .field-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .field-group { display: flex; flex-direction: column; gap: 0.5rem; }
+
+  label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-mid);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  select, input[type="range"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid rgba(232,41,74,0.2);
+    border-radius: 12px;
+    background: white;
+    color: var(--text-dark);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    appearance: none;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23e8294a' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+
+  select:focus {
+    outline: none;
+    border-color: var(--rose);
+    box-shadow: 0 0 0 3px rgba(232,41,74,0.1);
+  }
+
+  input[type="range"] {
+    padding: 0;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--rose) 0%, var(--rose-pale) 100%);
+    border: none;
+    cursor: pointer;
+    background-image: none;
+    margin-top: 0.5rem;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--rose);
+    cursor: pointer;
+    box-shadow: 0 2px 8px var(--glow);
+  }
+  .range-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: var(--text-mid);
+    margin-top: 0.3rem;
+  }
+  .range-value {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--rose);
+    font-weight: 500;
+    margin-top: 0.2rem;
+  }
+
+  /* Chip selects */
+  .chip-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.5rem;
+  }
+  .chip {
+    padding: 0.5rem 1rem;
+    border: 1.5px solid rgba(232,41,74,0.25);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+    color: var(--text-mid);
+    user-select: none;
+  }
+  .chip:hover { border-color: var(--rose); color: var(--rose); }
+  .chip.selected {
+    background: linear-gradient(135deg, var(--rose), var(--pink-deep));
+    border-color: transparent;
+    color: white;
+    box-shadow: 0 3px 10px var(--glow);
+  }
+
+  /* Buttons */
+  .btn-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    gap: 1rem;
+  }
+
+  .btn {
+    padding: 0.9rem 2rem;
+    border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s;
+    border: none;
+    letter-spacing: 0.02em;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--rose), var(--pink-deep));
+    color: white;
+    box-shadow: 0 4px 20px var(--glow);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px var(--glow); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-mid);
+    border: 1.5px solid rgba(232,41,74,0.25);
+  }
+  .btn-secondary:hover { border-color: var(--rose); color: var(--rose); }
+
+  /* Result card */
+  #result-card {
+    background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(255,240,243,0.95));
+    border: 1px solid rgba(232,41,74,0.2);
+  }
+
+  .result-header {
+    text-align: center;
+    padding: 1rem 0 2rem;
+  }
+  .result-header .emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+  .result-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--rose);
+    margin-bottom: 0.5rem;
+  }
+  .result-header p {
+    color: var(--text-mid);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+  }
+
+  .suggestions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.2rem;
+    margin-top: 1.5rem;
+  }
+
+  .suggestion-item {
+    background: white;
+    border: 1px solid rgba(232,41,74,0.12);
+    border-radius: 18px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .suggestion-item:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(232,41,74,0.12); }
+  .suggestion-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--rose), var(--rose-light));
+  }
+
+  .suggestion-rank {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--rose);
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+  .suggestion-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--text-dark);
+    margin-bottom: 0.7rem;
+  }
+  .suggestion-why {
+    font-size: 0.83rem;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+  .suggestion-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-top: 0.8rem;
+  }
+  .tag {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    background: var(--blush);
+    color: var(--rose);
+    border-radius: 10px;
+  }
+
+  .tips-section {
+    margin-top: 2rem;
+    background: linear-gradient(135deg, rgba(232,41,74,0.05), rgba(201,24,74,0.08));
+    border-radius: 18px;
+    padding: 1.5rem;
+    border: 1px solid rgba(232,41,74,0.1);
+  }
+  .tips-section h3 {
+    font-family: 'Playfair Display', serif;
+    color: var(--rose);
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .tips-list { list-style: none; }
+  .tips-list li {
+    font-size: 0.88rem;
+    color: var(--text-mid);
+    padding: 0.4rem 0;
+    padding-left: 1.2rem;
+    position: relative;
+    border-bottom: 1px solid rgba(232,41,74,0.06);
+  }
+  .tips-list li:last-child { border-bottom: none; }
+  .tips-list li::before {
+    content: '✦';
+    position: absolute;
+    left: 0;
+    color: var(--rose-pale);
+    font-size: 0.7rem;
+    top: 0.55rem;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 3rem 1rem;
+    display: none;
+  }
+  .loading.active { display: block; }
+  .loading-hearts {
+    font-size: 2rem;
+    animation: pulse 1s infinite;
+  }
+  @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.3);opacity:0.7} }
+  .loading p {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--text-mid);
+    font-size: 1.1rem;
+    margin-top: 1rem;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    height: 3px;
+    background: var(--blush);
+    border-radius: 2px;
+    margin-bottom: 2rem;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--rose), var(--rose-light));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  /* Disclaimer */
+  .disclaimer {
+    text-align: center;
+    font-size: 0.72rem;
+    color: rgba(122,31,53,0.5);
+    margin-top: 2rem;
+    padding: 0 2rem;
+    line-height: 1.6;
+  }
+
+  .restart-btn {
+    display: block;
+    margin: 1.5rem auto 0;
+  }
+
+  @media (max-width: 600px) {
+    .card { padding: 1.5rem; }
+    h1 { font-size: 2.2rem; }
+    .field-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="petal-bg" id="petalBg"></div>
+
+<header>
+  <div class="logo-badge">✦ Intimacy Guide ✦</div>
+  <h1>Find Your Perfect<br><em>Intimate Match</em></h1>
+  <p class="subtitle">Personalized suggestions crafted just for you</p>
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-icon">❧</div>
+    <div class="divider-line"></div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="steps-bar" id="stepsBar">
+    <div class="step-dot active" id="dot0"></div>
+    <div class="step-dot" id="dot1"></div>
+    <div class="step-dot" id="dot2"></div>
+    <div class="step-dot" id="dot3"></div>
+    <div class="step-dot" id="dot4"></div>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+
+  <!-- Step 1: Basic Info -->
+  <div class="card active" id="step0">
+    <div class="card-header">
+      <div class="card-icon">👤</div>
+      <div>
+        <div class="card-title">About You</div>
+        <div class="card-desc">Basic details to personalize your experience</div>
+      </div>
+    </div>
+
+    <div class="field-grid">
+      <div class="field-group">
+        <label>Age Range</label>
+        <select id="age">
+          <option value="">Select age range</option>
+          <option value="18-24">18–24</option>
+          <option value="25-34">25–34</option>
+          <option value="35-44">35–44</option>
+          <option value="45-54">45–54</option>
+          <option value="55+">55+</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label>Body Type</label>
+        <select id="bodyType">
+          <option value="">Select body type</option>
+          <option value="slim">Slim / Lean</option>
+          <option value="athletic">Athletic</option>
+          <option value="average">Average</option>
+          <option value="curvy">Curvy / Full-figured</option>
+          <option value="plus">Plus Size</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label>Flexibility Level</label>
+        <select id="flexibility">
+          <option value="">How flexible are you?</option>
+          <option value="low">Not very flexible</option>
+          <option value="moderate">Moderately flexible</option>
+          <option value="high">Very flexible</option>
+          <option value="yoga">Extremely flexible (yoga level)</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label>Fitness / Stamina</label>
+        <select id="fitness">
+          <option value="">Select stamina level</option>
+          <option value="low">Prefer gentle, low-energy</option>
+          <option value="moderate">Moderate activity</option>
+          <option value="high">High energy, athletic</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <div></div>
+      <button class="btn btn-primary" onclick="nextStep(0)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Mood & Desire -->
+  <div class="card" id="step1">
+    <div class="card-header">
+      <div class="card-icon">💫</div>
+      <div>
+        <div class="card-title">Mood & Desire</div>
+        <div class="card-desc">What energy are you feeling today?</div>
+      </div>
+    </div>
+
+    <div class="field-group" style="margin-bottom:1.5rem">
+      <label>Current Mood</label>
+      <div class="chip-grid" id="moodChips">
+        <div class="chip" onclick="toggleChip(this,'mood')">💕 Romantic</div>
+        <div class="chip" onclick="toggleChip(this,'mood')">🔥 Passionate</div>
+        <div class="chip" onclick="toggleChip(this,'mood')">😴 Relaxed / Lazy</div>
+        <div class="chip" onclick="toggleChip(this,'mood')">⚡ Adventurous</div>
+        <div class="chip" onclick="toggleChip(this,'mood')">🌙 Sensual / Slow</div>
+        <div class="chip" onclick="toggleChip(this,'mood')">🎉 Playful / Fun</div>
+        <div class="chip" onclick="toggleChip(this,'mood')">💪 Dominant</div>
+        <div class="chip" onclick="toggleChip(this,'mood')">🌸 Submissive</div>
+      </div>
+    </div>
+
+    <div class="field-group" style="margin-bottom:1.5rem">
+      <label>Desired Intensity</label>
+      <input type="range" id="intensity" min="1" max="5" value="3" oninput="updateRange('intensity','intensityVal',['Very Gentle','Gentle','Moderate','Intense','Extremely Intense'])">
+      <div class="range-value" id="intensityVal">Moderate</div>
+      <div class="range-labels"><span>Gentle</span><span>Intense</span></div>
+    </div>
+
+    <div class="field-group">
+      <label>Depth of Intimacy</label>
+      <div class="chip-grid" id="intimacyChips">
+        <div class="chip" onclick="toggleChip(this,'intimacy')">🤗 Cuddly & Close</div>
+        <div class="chip" onclick="toggleChip(this,'intimacy')">👀 Eye Contact</div>
+        <div class="chip" onclick="toggleChip(this,'intimacy')">🌊 Deep Connection</div>
+        <div class="chip" onclick="toggleChip(this,'intimacy')">🎭 Playful Distance</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="prevStep(1)">← Back</button>
+      <button class="btn btn-primary" onclick="nextStep(1)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Preferences -->
+  <div class="card" id="step2">
+    <div class="card-header">
+      <div class="card-icon">⚙️</div>
+      <div>
+        <div class="card-title">Preferences</div>
+        <div class="card-desc">Physical comfort and situation details</div>
+      </div>
+    </div>
+
+    <div class="field-grid" style="margin-bottom:1.5rem">
+      <div class="field-group">
+        <label>Setting / Location</label>
+        <select id="setting">
+          <option value="">Where are you?</option>
+          <option value="bed">Bedroom / Bed</option>
+          <option value="couch">Couch / Sofa</option>
+          <option value="floor">Floor / Rug</option>
+          <option value="shower">Shower / Bath</option>
+          <option value="outdoor">Outdoors</option>
+          <option value="anywhere">Anywhere works</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label>Time Available</label>
+        <select id="time">
+          <option value="">How much time?</option>
+          <option value="quickie">Quickie (&lt;10 min)</option>
+          <option value="short">Short (10–20 min)</option>
+          <option value="medium">Medium (20–45 min)</option>
+          <option value="long">Extended (45+ min)</option>
+          <option value="night">All night</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field-group" style="margin-bottom:1.5rem">
+      <label>Any Physical Considerations?</label>
+      <div class="chip-grid">
+        <div class="chip" onclick="toggleChip(this,'physical')">🦵 Bad Knees</div>
+        <div class="chip" onclick="toggleChip(this,'physical')">🦷 Bad Back</div>
+        <div class="chip" onclick="toggleChip(this,'physical')">🤰 Pregnant</div>
+        <div class="chip" onclick="toggleChip(this,'physical')">🩹 Post-Injury</div>
+        <div class="chip selected" onclick="toggleChip(this,'physical')">✅ No Limitations</div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Partner Dynamic</label>
+      <div class="chip-grid">
+        <div class="chip" onclick="toggleChip(this,'dynamic')">🆕 New Partner</div>
+        <div class="chip" onclick="toggleChip(this,'dynamic')">💑 Long-term Partner</div>
+        <div class="chip" onclick="toggleChip(this,'dynamic')">🔄 Trying Something New</div>
+        <div class="chip" onclick="toggleChip(this,'dynamic')">💪 Want to Lead</div>
+        <div class="chip" onclick="toggleChip(this,'dynamic')">🌸 Want to Follow</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="prevStep(2)">← Back</button>
+      <button class="btn btn-primary" onclick="nextStep(2)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Experience -->
+  <div class="card" id="step3">
+    <div class="card-header">
+      <div class="card-icon">✨</div>
+      <div>
+        <div class="card-title">Experience & History</div>
+        <div class="card-desc">Help us refine your suggestions</div>
+      </div>
+    </div>
+
+    <div class="field-group" style="margin-bottom:1.5rem">
+      <label>Experience Level</label>
+      <input type="range" id="experience" min="1" max="5" value="3" oninput="updateRange('experience','experienceVal',['Complete Beginner','Beginner','Intermediate','Experienced','Very Experienced'])">
+      <div class="range-value" id="experienceVal">Intermediate</div>
+      <div class="range-labels"><span>Beginner</span><span>Expert</span></div>
+    </div>
+
+    <div class="field-group" style="margin-bottom:1.5rem">
+      <label>Positions You Already Love</label>
+      <div class="chip-grid" id="knownChips">
+        <div class="chip" onclick="toggleChip(this,'known')">Missionary</div>
+        <div class="chip" onclick="toggleChip(this,'known')">Cowgirl / Reverse</div>
+        <div class="chip" onclick="toggleChip(this,'known')">Doggy Style</div>
+        <div class="chip" onclick="toggleChip(this,'known')">Spooning</div>
+        <div class="chip" onclick="toggleChip(this,'known')">Seated / Lap</div>
+        <div class="chip" onclick="toggleChip(this,'known')">Standing</div>
+        <div class="chip" onclick="toggleChip(this,'known')">Side-by-side</div>
+        <div class="chip" onclick="toggleChip(this,'known')">Oral Focus</div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>What Do You Want to Explore?</label>
+      <div class="chip-grid">
+        <div class="chip" onclick="toggleChip(this,'explore')">🔥 More Intensity</div>
+        <div class="chip" onclick="toggleChip(this,'explore')">💞 More Intimacy</div>
+        <div class="chip" onclick="toggleChip(this,'explore')">⚡ New Sensations</div>
+        <div class="chip" onclick="toggleChip(this,'explore')">🎯 Better Angles</div>
+        <div class="chip" onclick="toggleChip(this,'explore')">😴 Less Effort</div>
+        <div class="chip" onclick="toggleChip(this,'explore')">👀 Eye Contact</div>
+        <div class="chip" onclick="toggleChip(this,'explore')">🕹️ Partner Control</div>
+        <div class="chip" onclick="toggleChip(this,'explore')">💪 My Control</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="prevStep(3)">← Back</button>
+      <button class="btn btn-primary" onclick="generateSuggestions()">✦ Get My Suggestions</button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="card" id="loadingCard">
+    <div class="loading active">
+      <div class="loading-hearts">💕</div>
+      <p>Crafting your personalized suggestions…</p>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="card" id="resultCard">
+    <div class="result-header">
+      <div class="emoji">🌹</div>
+      <h2 id="resultTitle">Your Perfect Matches</h2>
+      <p id="resultSubtitle">Personalized for your mood and preferences</p>
+    </div>
+
+    <div class="suggestions-grid" id="suggestionsGrid"></div>
+
+    <div class="tips-section" id="tipsSection">
+      <h3>✦ Personalized Tips</h3>
+      <ul class="tips-list" id="tipsList"></ul>
+    </div>
+
+    <button class="btn btn-primary restart-btn" onclick="restart()">✦ Start Over</button>
+  </div>
+
+  <p class="disclaimer">This tool is intended for consenting adults (18+). All suggestions are for educational and entertainment purposes. Always prioritize communication, consent, and comfort with your partner.</p>
+</div>
+
+<script>
+  // Generate floating petals
+  const petalBg = document.getElementById('petalBg');
+  const petals = ['🌸','🌺','💮','🏵️','💕','✿'];
+  for(let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = petals[Math.floor(Math.random()*petals.length)];
+    p.style.left = Math.random()*100+'%';
+    p.style.animationDuration = (8+Math.random()*12)+'s';
+    p.style.animationDelay = (Math.random()*15)+'s';
+    p.style.fontSize = (0.8+Math.random()*1.2)+'rem';
+    petalBg.appendChild(p);
+  }
+
+  let currentStep = 0;
+  const selections = {};
+
+  function toggleChip(el, group) {
+    const isMono = ['mood','intimacy','physical','dynamic'].includes(group);
+    if (!isMono) {
+      el.classList.toggle('selected');
+    } else {
+      // multi allowed for these
+      el.classList.toggle('selected');
+    }
+    if (!selections[group]) selections[group] = [];
+    const val = el.textContent.trim();
+    if (el.classList.contains('selected')) {
+      if (!selections[group].includes(val)) selections[group].push(val);
+    } else {
+      selections[group] = selections[group].filter(v => v !== val);
+    }
+  }
+
+  function updateRange(inputId, valId, labels) {
+    const val = document.getElementById(inputId).value;
+    document.getElementById(valId).textContent = labels[val-1];
+  }
+
+  function updateProgress(step) {
+    const pct = (step / 4) * 100;
+    document.getElementById('progressFill').style.width = pct + '%';
+    for(let i=0; i<5; i++){
+      const dot = document.getElementById('dot'+i);
+      dot.className = 'step-dot';
+      if(i < step) dot.classList.add('done');
+      else if(i === step) dot.classList.add('active');
+    }
+  }
+
+  function nextStep(from) {
+    document.getElementById('step'+from).classList.remove('active');
+    currentStep = from + 1;
+    document.getElementById('step'+currentStep).classList.add('active');
+    updateProgress(currentStep);
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function prevStep(from) {
+    document.getElementById('step'+from).classList.remove('active');
+    currentStep = from - 1;
+    document.getElementById('step'+currentStep).classList.add('active');
+    updateProgress(currentStep);
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function gatherData() {
+    return {
+      age: document.getElementById('age').value,
+      bodyType: document.getElementById('bodyType').value,
+      flexibility: document.getElementById('flexibility').value,
+      fitness: document.getElementById('fitness').value,
+      mood: selections['mood'] || [],
+      intensity: parseInt(document.getElementById('intensity').value),
+      intimacy: selections['intimacy'] || [],
+      setting: document.getElementById('setting').value,
+      time: document.getElementById('time').value,
+      physical: selections['physical'] || [],
+      dynamic: selections['dynamic'] || [],
+      experience: parseInt(document.getElementById('experience').value),
+      known: selections['known'] || [],
+      explore: selections['explore'] || []
+    };
+  }
+
+  // Position database
+  const positionDB = [
+    {
+      name: "Classic Missionary",
+      emoji: "💑",
+      tags: ["Intimate","Gentle","Eye Contact","Beginner"],
+      intensity: 2,
+      intimacy: 5,
+      flexibility: "low",
+      fitness: "low",
+      moods: ["Romantic","Sensual / Slow","Cuddly & Close"],
+      description: "Face-to-face, deeply intimate and close. Perfect for emotional connection and gentle pleasure.",
+      settings: ["bed","couch","floor","anywhere"],
+      good_for: ["New Partner","Long-term Partner","Bad Back"],
+      explore_tags: ["More Intimacy","Eye Contact"]
+    },
+    {
+      name: "Elevated Missionary",
+      emoji: "⬆️",
+      tags: ["Intimate","Deeper","Better Angle","Easy"],
+      intensity: 3,
+      intimacy: 4,
+      flexibility: "low",
+      fitness: "low",
+      moods: ["Romantic","Passionate","Deep Connection"],
+      description: "Missionary with hips elevated by a pillow — dramatically changes the angle for deeper, more satisfying contact.",
+      settings: ["bed","anywhere"],
+      good_for: ["Long-term Partner","Better Angles","More Intensity"],
+      explore_tags: ["Better Angles","New Sensations"]
+    },
+    {
+      name: "Cowgirl",
+      emoji: "🤠",
+      tags: ["Partner Control","Empowering","Visible","Dynamic"],
+      intensity: 3,
+      intimacy: 3,
+      flexibility: "moderate",
+      fitness: "moderate",
+      moods: ["Dominant","Passionate","Adventurous"],
+      description: "You're on top and in full control of depth, rhythm, and angle. One of the most empowering positions.",
+      settings: ["bed","couch","anywhere"],
+      good_for: ["My Control","New Sensations","Partner Control"],
+      explore_tags: ["My Control","Better Angles","More Intensity"]
+    },
+    {
+      name: "Reverse Cowgirl",
+      emoji: "🔄",
+      tags: ["Adventurous","Different Angle","Fun","Bold"],
+      intensity: 3,
+      intimacy: 2,
+      flexibility: "moderate",
+      fitness: "moderate",
+      moods: ["Adventurous","Playful / Fun","Dominant"],
+      description: "Cowgirl facing away — a dramatically different angle with a visually exciting view for both partners.",
+      settings: ["bed","anywhere"],
+      good_for: ["Trying Something New","Better Angles"],
+      explore_tags: ["New Sensations","Better Angles","My Control"]
+    },
+    {
+      name: "Spooning",
+      emoji: "🥄",
+      tags: ["Lazy","Cozy","Gentle","Intimate"],
+      intensity: 1,
+      intimacy: 5,
+      flexibility: "low",
+      fitness: "low",
+      moods: ["Relaxed / Lazy","Romantic","Sensual / Slow"],
+      description: "Side-by-side, facing the same direction. Incredibly cozy and low-effort with skin-to-skin contact all along the back.",
+      settings: ["bed","couch","floor","anywhere"],
+      good_for: ["Bad Back","Bad Knees","Post-Injury","Pregnant","Less Effort"],
+      explore_tags: ["More Intimacy","Less Effort"]
+    },
+    {
+      name: "Doggy Style",
+      emoji: "🔥",
+      tags: ["Deep","Passionate","Primal","Intense"],
+      intensity: 4,
+      intimacy: 2,
+      flexibility: "low",
+      fitness: "moderate",
+      moods: ["Passionate","Adventurous","Dominant"],
+      description: "From behind, kneeling — deeper penetration with intense sensation. One of the most popular positions for a reason.",
+      settings: ["bed","floor","anywhere"],
+      good_for: ["More Intensity","New Sensations","Partner Control"],
+      explore_tags: ["More Intensity","Partner Control","Better Angles"]
+    },
+    {
+      name: "Lazy Doggy",
+      emoji: "😴",
+      tags: ["Easy","Deep","Comfortable","Low-energy"],
+      intensity: 3,
+      intimacy: 2,
+      flexibility: "low",
+      fitness: "low",
+      moods: ["Relaxed / Lazy","Adventurous"],
+      description: "Like doggy, but both partners lying flat. All the depth of doggy style with a fraction of the effort.",
+      settings: ["bed","floor","anywhere"],
+      good_for: ["Less Effort","Bad Back","More Intensity"],
+      explore_tags: ["Less Effort","Better Angles"]
+    },
+    {
+      name: "The Lotus",
+      emoji: "🪷",
+      tags: ["Ultra-Intimate","Connected","Tantric","Spiritual"],
+      intensity: 2,
+      intimacy: 5,
+      flexibility: "high",
+      fitness: "moderate",
+      moods: ["Sensual / Slow","Romantic","Deep Connection"],
+      description: "Face-to-face, sitting with legs wrapped around each other. Maximum full-body contact and emotional intimacy.",
+      settings: ["bed","floor","anywhere"],
+      good_for: ["Long-term Partner","More Intimacy","Eye Contact"],
+      explore_tags: ["More Intimacy","Eye Contact","New Sensations"]
+    },
+    {
+      name: "Standing Rear",
+      emoji: "🚿",
+      tags: ["Spontaneous","Shower","Wall","Hot"],
+      intensity: 4,
+      intimacy: 2,
+      flexibility: "moderate",
+      fitness: "high",
+      moods: ["Passionate","Adventurous","Dominant"],
+      description: "Standing, from behind. Spontaneous and incredibly hot, perfect for the shower, against a wall, or any vertical surface.",
+      settings: ["shower","outdoor","anywhere"],
+      good_for: ["Trying Something New","New Sensations","Partner Control"],
+      explore_tags: ["New Sensations","Partner Control","More Intensity"]
+    },
+    {
+      name: "The Chair / Lap",
+      emoji: "🪑",
+      tags: ["Face-to-face","Control","Seated","Versatile"],
+      intensity: 3,
+      intimacy: 4,
+      flexibility: "low",
+      fitness: "moderate",
+      moods: ["Romantic","Dominant","Playful / Fun"],
+      description: "One partner sits while the other straddles their lap face-to-face. Great for kissing and connection while maintaining depth and control.",
+      settings: ["couch","anywhere"],
+      good_for: ["Long-term Partner","Eye Contact","My Control"],
+      explore_tags: ["More Intimacy","Eye Contact","Better Angles"]
+    },
+    {
+      name: "The Butterfly",
+      emoji: "🦋",
+      tags: ["Deep","Intimate","Lifted","Edge of Bed"],
+      intensity: 4,
+      intimacy: 4,
+      flexibility: "moderate",
+      fitness: "low",
+      moods: ["Passionate","Sensual / Slow","Deep Connection"],
+      description: "Lying at the edge of the bed with legs raised and held by partner. Effortless for the bottom, deep and satisfying for both.",
+      settings: ["bed"],
+      good_for: ["Long-term Partner","Better Angles","Less Effort"],
+      explore_tags: ["Better Angles","More Intensity","New Sensations"]
+    },
+    {
+      name: "The Pretzel",
+      emoji: "🥨",
+      tags: ["Unique","Deep","Flexible","Different"],
+      intensity: 4,
+      intimacy: 3,
+      flexibility: "high",
+      fitness: "moderate",
+      moods: ["Adventurous","Passionate"],
+      description: "A mix of spoon and doggy — one partner's legs are crossed over the other's in a scissoring position, creating a unique angle.",
+      settings: ["bed","anywhere"],
+      good_for: ["Trying Something New","New Sensations","Better Angles"],
+      explore_tags: ["New Sensations","Better Angles","More Intensity"]
+    },
+    {
+      name: "Seated Oral",
+      emoji: "💋",
+      tags: ["Oral Focus","Receiving","Relaxed","No-penetration"],
+      intensity: 2,
+      intimacy: 4,
+      flexibility: "low",
+      fitness: "low",
+      moods: ["Sensual / Slow","Romantic","Submissive"],
+      description: "One partner sits comfortably while receiving oral pleasure. Completely relaxing with intense focused sensation.",
+      settings: ["bed","couch","anywhere"],
+      good_for: ["Less Effort","Oral Focus","Any Limitations"],
+      explore_tags: ["New Sensations","Less Effort","More Intimacy"]
+    },
+    {
+      name: "69 Position",
+      emoji: "♾️",
+      tags: ["Mutual Oral","Simultaneous","Fun","Active"],
+      intensity: 3,
+      intimacy: 3,
+      flexibility: "moderate",
+      fitness: "moderate",
+      moods: ["Playful / Fun","Adventurous","Passionate"],
+      description: "Mutual oral pleasure simultaneously. Requires some coordination but extremely fun and equally satisfying for both.",
+      settings: ["bed","floor","anywhere"],
+      good_for: ["Trying Something New","Oral Focus","New Sensations"],
+      explore_tags: ["New Sensations","Partner Control"]
+    },
+    {
+      name: "The Cradle",
+      emoji: "🌙",
+      tags: ["Slow","Intimate","Rocking","Connected"],
+      intensity: 2,
+      intimacy: 5,
+      flexibility: "low",
+      fitness: "low",
+      moods: ["Sensual / Slow","Romantic","Relaxed / Lazy"],
+      description: "Both partners sit facing each other with legs wrapped around. Slow rocking motion, maximum intimacy with minimal effort.",
+      settings: ["bed","floor"],
+      good_for: ["Long-term Partner","More Intimacy","Less Effort"],
+      explore_tags: ["More Intimacy","Eye Contact","Less Effort"]
+    }
+  ];
+
+  function scorePosition(pos, data) {
+    let score = 0;
+
+    // Intensity match
+    const intensityDiff = Math.abs(pos.intensity - data.intensity);
+    score += (5 - intensityDiff) * 3;
+
+    // Mood match
+    const moodMatches = data.mood.filter(m => pos.moods.some(pm => pm.includes(m.replace(/[^a-zA-Z]/g,'').toLowerCase()) || m.toLowerCase().includes(pm.replace(/[^a-zA-Z]/g,'').toLowerCase())));
+    score += moodMatches.length * 4;
+
+    // Setting match
+    if (data.setting && (pos.settings.includes(data.setting) || pos.settings.includes('anywhere'))) score += 5;
+
+    // Explore match
+    if (data.explore) {
+      const exploreMatches = data.explore.filter(e => {
+        const clean = e.replace(/[^a-zA-Z ]/g,'').trim().toLowerCase();
+        return pos.explore_tags.some(t => t.toLowerCase().includes(clean) || clean.includes(t.toLowerCase().replace(/[^a-zA-Z ]/g,'').trim()));
+      });
+      score += exploreMatches.length * 5;
+    }
+
+    // Physical considerations
+    if (data.physical && data.physical.includes('✅ No Limitations')) score += 2;
+    const limitations = data.physical || [];
+    if (limitations.some(l => l.includes('Bad Knees') || l.includes('Bad Back') || l.includes('Post-Injury'))) {
+      if (pos.fitness === 'low') score += 3;
+    }
+    if (limitations.some(l => l.includes('Pregnant'))) {
+      if (pos.name.includes('Spoon') || pos.name.includes('Lazy') || pos.name.includes('Seated')) score += 5;
+    }
+
+    // Flexibility match
+    const flexMap = {low:1, moderate:2, high:3, yoga:4};
+    const userFlex = flexMap[data.flexibility] || 2;
+    const posFlex = flexMap[pos.flexibility] || 2;
+    if (posFlex <= userFlex) score += 3;
+    else score -= 2;
+
+    // Fitness match
+    const fitMap = {low:1, moderate:2, high:3};
+    const userFit = fitMap[data.fitness] || 2;
+    const posFit = fitMap[pos.fitness] || 1;
+    if (posFit <= userFit) score += 2;
+
+    // Time match
+    if (data.time === 'quickie' && pos.fitness === 'high') score += 2;
+    if (data.time === 'night' && pos.intensity >= 3) score += 2;
+
+    // Experience — beginners avoid complex positions
+    if (data.experience <= 2 && pos.flexibility === 'high') score -= 3;
+    if (data.experience >= 4) score += 1;
+
+    // Exclude already-known if exploring new
+    if (data.explore && data.explore.some(e => e.includes('New'))) {
+      if (data.known && data.known.some(k => pos.name.toLowerCase().includes(k.toLowerCase().split(' ')[0]))) {
+        score -= 2;
+      }
+    }
+
+    return score;
+  }
+
+  function generateTips(data, topPositions) {
+    const tips = [];
+
+    if (data.flexibility === 'low' || data.flexibility === '') {
+      tips.push("Place a pillow under your hips in many positions to enhance angle and comfort without requiring flexibility.");
+    }
+    if (data.mood && data.mood.some(m => m.includes('Romantic') || m.includes('Sensual'))) {
+      tips.push("Slow down — try starting with 10 minutes of focused touch and kissing before any position. The buildup amplifies everything.");
+    }
+    if (data.intensity >= 4) {
+      tips.push("At higher intensities, warm up with gentler positions first. Your body will respond much more intensely when properly aroused.");
+    }
+    if (data.time === 'quickie') {
+      tips.push("For a quickie, skip the buildup and go straight to what you already know works best for both of you.");
+    }
+    if (data.setting === 'shower') {
+      tips.push("Shower intimacy: Use a non-slip mat, lower the water temperature slightly to prevent overheating, and use silicone-based lubrication.");
+    }
+    if (data.physical && (data.physical.includes('🦷 Bad Back') || data.physical.includes('🦵 Bad Knees'))) {
+      tips.push("With physical limitations, use plenty of pillows for support, communicate openly about comfort, and feel free to pause and adjust at any time.");
+    }
+    if (data.dynamic && data.dynamic.includes('🆕 New Partner')) {
+      tips.push("With a new partner, start with easier, face-to-face positions that allow more communication and build comfort and trust.");
+    }
+    if (data.explore && data.explore.includes('💞 More Intimacy')) {
+      tips.push("To increase emotional intimacy: maintain eye contact, speak or breathe together, and slow the rhythm down — less movement, more presence.");
+    }
+    if (data.explore && data.explore.includes('🎯 Better Angles')) {
+      tips.push("Small adjustments matter more than big changes. Try tilting your pelvis by just 15–20 degrees to find dramatically different sensations.");
+    }
+    tips.push("Communication is the ultimate intimacy enhancer. Check in with your partner during and after to build a feedback loop.");
+
+    return tips.slice(0, 5);
+  }
+
+  async function generateSuggestions() {
+    const data = gatherData();
+    document.getElementById('step3').classList.remove('active');
+    document.getElementById('loadingCard').classList.add('active');
+    updateProgress(4);
+    window.scrollTo({top:0, behavior:'smooth'});
+
+    await new Promise(r => setTimeout(r, 1800));
+
+    // Score all positions
+    const scored = positionDB.map(p => ({ ...p, score: scorePosition(p, data) }));
+    scored.sort((a,b) => b.score - a.score);
+    const top = scored.slice(0, 4);
+
+    document.getElementById('loadingCard').classList.remove('active');
+    document.getElementById('resultCard').classList.add('active');
+
+    // Set title
+    const moodText = data.mood.length > 0 ? data.mood[0].replace(/[^a-zA-Z ]/g,'').trim() : 'Intimate';
+    document.getElementById('resultTitle').textContent = `Your ${moodText} Matches`;
+    document.getElementById('resultSubtitle').textContent = `${top.length} personalized suggestions based on your preferences`;
+
+    // Render suggestions
+    const grid = document.getElementById('suggestionsGrid');
+    grid.innerHTML = '';
+    const ranks = ['Top Pick','2nd Choice','3rd Choice','Bonus Pick'];
+    top.forEach((pos, i) => {
+      const div = document.createElement('div');
+      div.className = 'suggestion-item';
+      div.style.animationDelay = (i*0.1)+'s';
+      div.innerHTML = `
+        <div class="suggestion-rank">${ranks[i]}</div>
+        <div class="suggestion-name">${pos.emoji} ${pos.name}</div>
+        <div class="suggestion-why">${pos.description}</div>
+        <div class="suggestion-tags">
+          ${pos.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+        </div>
+      `;
+      grid.appendChild(div);
+    });
+
+    // Tips
+    const tips = generateTips(data, top);
+    const tipsList = document.getElementById('tipsList');
+    tipsList.innerHTML = tips.map(t => `<li>${t}</li>`).join('');
+
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function restart() {
+    document.getElementById('resultCard').classList.remove('active');
+    document.getElementById('step0').classList.add('active');
+    currentStep = 0;
+    updateProgress(0);
+    // Reset all chips
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+    Object.keys(selections).forEach(k => delete selections[k]);
+    // Reset selects
+    document.querySelectorAll('select').forEach(s => s.value = '');
+    // Reset ranges
+    document.getElementById('intensity').value = 3;
+    document.getElementById('experience').value = 3;
+    document.getElementById('intensityVal').textContent = 'Moderate';
+    document.getElementById('experienceVal').textContent = 'Intermediate';
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  // Initialize range values
+  updateRange('intensity','intensityVal',['Very Gentle','Gentle','Moderate','Intense','Extremely Intense']);
+  updateRange('experience','experienceVal',['Complete Beginner','Beginner','Intermediate','Experienced','Very Experienced']);
+</script>
+</body>
+</html>
